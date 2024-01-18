@@ -1,9 +1,9 @@
 NAME = libasm
 
-SRC = 	ft_strlen.asm
+SRC = 	ft_strlen.asm ft_strcpy.asm ft_strcmp.asm
 TEST = main.c
 
-INCLUDE = -I libasam.h
+INCLUDE = libasm.h
 OBJ = $(SRC:%.asm=%.o)
 
 
@@ -16,17 +16,16 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	ar rcs $(OBJ)
+	ar r $@ $(OBJ)
 
-%.o: %.asm
-	nasm  $(INCLUDE) -felf64 $< -o $@
+%.o: %.asm $(INCLUDE)
+	nasm  -felf64 $<
 
-main.o: main.c
-	$(CC) $(CFLAGS) main.c -c -o main.o
+%.o: %.c
+	gcc $(CFLAGS) -c $< -o $@
 
 test: main.o $(NAME)
-	$(CC) $(CFLAGS) main.o -o test -L. -lasm
-	./test
+	gcc $(CFLAGS) $^ -o test
 
 clean:
 	rm -f $(OBJ) main.o test
