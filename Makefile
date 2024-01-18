@@ -16,17 +16,20 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	c++ $(OBJ) -o $(NAME)
+	ar rcs $(OBJ)
 
 %.o: %.asm
 	nasm  $(INCLUDE) -felf64 $< -o $@
 
+main.o: main.c
+	$(CC) $(CFLAGS) main.c -c -o main.o
+
 test: main.o $(NAME)
-	$(CC) $(CFLAGS) main.c -c -o main.0
+	$(CC) $(CFLAGS) main.o -o test -L. -lasm
 	./test
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) main.o test
 
 fclean: clean
 	rm -f $(NAME)

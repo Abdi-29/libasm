@@ -1,22 +1,22 @@
 section .text
-    [global ft_strlen:]
+    global ft_strlen
 
 ft_strlen:
     push rdi         ;preserve the value of rbx
-    mov rdi, esp     ;setup the stack frame
+    mov rdi, rbx     ;setup the stack frame
     xor rax, rax     ;i = 0
 
     loop:
         xor rdx, rdx
-        mov rdx, BYTE[rbx+rax]
-        cmp rdx, 0x0
+        mov dl, BYTE [rdi+rax]
+        cmp dl, 0x0
         je end
 
         inc rax
         jmp loop
 
     end:
-        pop rbx ;restore original rbx
+        pop rdi ;restore original rbx
 
         ret
 
