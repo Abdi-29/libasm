@@ -1,13 +1,13 @@
-NAME = libasm
+NAME = libasm.a
 
-SRC = 	ft_strlen.asm ft_strcpy.asm ft_strcmp.asm
+SRC = 	ft_strlen.asm ft_strcpy.asm ft_strcmp.asm ft_strdup.asm
 TEST = main.c
 
 INCLUDE = libasm.h
 OBJ = $(SRC:%.asm=%.o)
 
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -fPIE
 
 ifdef DEBUG
 	CFLAGS := $(CFLAGS) -g -fsanitize=address -fsanitize=undefined
@@ -22,10 +22,10 @@ $(NAME): $(OBJ)
 	nasm  -felf64 $<
 
 %.o: %.c
-	gcc $(CFLAGS) -c $< -o $@
+	gcc $(CFLAGS) -fPIE -c $< -o $@
 
 test: main.o $(NAME)
-	gcc $(CFLAGS) $^ -o test
+	gcc $(CFLAGS) -fPIE $^ -o test
 
 clean:
 	rm -f $(OBJ) main.o test
