@@ -4,7 +4,8 @@ SRC = 	ft_strlen.asm \
 		ft_strcpy.asm \
 		ft_strcmp.asm \
 		ft_strdup.asm \
-		ft_write.asm
+		ft_write.asm \
+		ft_read.asm
 TEST = main.c
 
 INCLUDE = libasm.h
