@@ -1,6 +1,10 @@
 NAME = libasm.a
 
-SRC = 	ft_strlen.asm ft_strcpy.asm ft_strcmp.asm ft_strdup.asm
+SRC = 	ft_strlen.asm \
+		ft_strcpy.asm \
+		ft_strcmp.asm \
+		ft_strdup.asm \
+		ft_write.asm
 TEST = main.c
 
 INCLUDE = libasm.h
