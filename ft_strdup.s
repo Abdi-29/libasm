@@ -12,7 +12,7 @@ ft_strdup:
     inc rax
     push rsi
     mov rdi, rax
-    call malloc wrt ..plt
+    call malloc wrt ..plt ;protect malloc
     mov rdi, rax
     pop rsi
     cmp rax, 0x0

@@ -4,7 +4,7 @@ section .text
 ft_strcpy:
     push rdx
     xor rdx, rdx
-    mov rax, rsi
+    mov rax, rdi
 
     loop:
         mov bl, BYTE [rsi + rdx]

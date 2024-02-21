@@ -1,15 +1,15 @@
 NAME = libasm.a
 
-SRC = 	ft_strlen.asm \
-		ft_strcpy.asm \
-		ft_strcmp.asm \
-		ft_strdup.asm \
-		ft_write.asm \
-		ft_read.asm
+SRC = 	ft_strlen.s \
+		ft_strcpy.s \
+		ft_strcmp.s \
+		ft_strdup.s \
+		ft_write.s \
+		ft_read.s
 TEST = main.c
 
 INCLUDE = libasm.h
-OBJ = $(SRC:%.asm=%.o)
+OBJ = $(SRC:%.s=%.o)
 
 
 CFLAGS = -Wall -Werror -Wextra -fPIE
@@ -23,7 +23,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	ar r $@ $(OBJ)
 
-%.o: %.asm $(INCLUDE)
+%.o: %.s $(INCLUDE)
 	nasm  -felf64 $<
 
 %.o: %.c
