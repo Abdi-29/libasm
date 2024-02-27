@@ -1,85 +1,125 @@
 #include "libasm.h"
-#include <stdio.h>
-#include <unistd.h>
 #include <assert.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <limits.h>
 
-#define PRINT(str) printf("----------------%s----------------\n", str);
+#include <stdio.h>
 
-static void test_strlen() {
-    PRINT("empty string");
-    assert(ft_strlen("") == 0);
-    PRINT("normal string");
-    assert(ft_strlen("normal string") == strlen("normal string"));
-    PRINT("string with null")
-    assert(ft_strlen("hello\0world") == 5);
+static void check_strlen()
+{
+  assert(ft_strlen("") == 0);
+  assert(ft_strlen("a") == 1);
+  assert(ft_strlen("hello world") == 11);
+  assert(ft_strlen("hello\0 world") == 5);
 }
 
-static void test_strcpy() {
-    PRINT("normal string")
-    char src[] = "hello world!";
-    char dst[20];
-    ft_strcpy(dst, src);
-    assert(memcmp(src, dst, strlen(src) + 1) == 0);
+static void check_strcpy()
+{
+  char buffer[1024];
+  char tmp[1024];
 
-    PRINT("empty string")
-    char src2[] = "";
-    char dst2[5];
-    ft_strcpy(dst2, src2);
-    assert(memcmp(src2, dst2, strlen(dst2) + 1) == 0);
+  memset(buffer, 0, sizeof buffer);
+  memset(tmp, 0, sizeof tmp);
+  assert(ft_strcpy(buffer, "") == buffer);
+  assert(memcmp(buffer, tmp, sizeof tmp) == 0);
 
-    PRINT("string with null terminator")
-    char src3[] = "hello\0world";
-    char dst3[20];
-    ft_strcpy(dst3, src3);
-    assert(memcmp(src3, dst3, strlen(dst3) + 1) == 0);
+  const char *str1 = "hello world!";
+  assert(ft_strcpy(buffer, str1) == buffer);
+  assert(strcmp(buffer, str1) == 0);
+
+  memset(buffer, 0, sizeof buffer);
+  const char *str2 = "hello\0 world!";
+  assert(ft_strcpy(buffer, str2) == buffer);
+  assert(strcmp(buffer, str2) == 0);
 }
 
-static void test_strcmp() {
-    char src[] = "hello world";
-    char dst[] = "hello world";
-
-    PRINT("same string")
-    assert(ft_strcmp(src, dst) == 0);
-
-    char src2[] = "hello world\200";
-    char dst2[] = "hello world\300";
-
-    PRINT("src smaller than dst")
-    assert(ft_strcmp(src2, dst2) < 0);
-
-    char src3[] = "hello world\300";
-    char dst3[] = "hello world\200";
-
-    PRINT("src bigger than dst")
-    assert(ft_strcmp(src3, dst3) > 0);
+static void check_strcmp()
+{
+  assert(ft_strcmp("", "") == 0);
+  assert(ft_strcmp("hello", "hello") == 0);
+  assert(ft_strcmp("ab", "ac") < 0);
+  assert(ft_strcmp("ac", "ab") > 0);
+  assert(ft_strcmp("abc", "acc") < 0);
+  assert(ft_strcmp("acc", "abc") > 0);
 }
 
-static void test_strdup() {
-    char str[] = "";
-    char *copy;
-    
-    PRINT("copy empty string")
-    copy = ft_strdup(str);
-    printf("pointer %p\n", copy);
-    assert(strcmp(str, copy) == 0);
-    free(copy);
+static void check_strdup_one(const char *s)
+{
+  char *d = ft_strdup(s);
+  assert(!strcmp(d, s));
+  free(d);
+}
 
-    // char str2[] = "hello world\0";
-    // char *copy2;
+static void check_strdup()
+{
+  check_strdup_one("");
+  check_strdup_one("hallo");
+}
 
-    // copy2 = malloc(strlen(str2) + 1);
-    // (void)copy2;
-    // copy2 = ft_strdup(str2);
-    // assert(memcmp(str2, copy2, strlen(copy2) + 1) == 0);
-    // free(copy);
+static void check_read()
+{
+  char a[1024], b[1024];
+
+  memset(a, 0, sizeof a);
+  memset(b, 0, sizeof b);
+  assert(ft_read(-1, NULL, 0) == -1);
+  assert(errno == EBADF);
+
+  int dev = open("/", O_RDONLY);
+  assert(dev >= 0);
+  assert(ft_read(dev, a, sizeof a) == -1);
+  assert(errno == EISDIR);
+  assert(!close(dev));
+
+  int make = open("Makefile", O_RDONLY);
+  ssize_t theirs = read(make, a, sizeof a);
+
+  assert(theirs != -1);
+  assert(lseek(make, 0, SEEK_SET) != -1);
+
+  assert(ft_read(make, b, sizeof b) == theirs);
+  assert(!strncmp(a, b, sizeof a));
+
+  assert(!close(make));
+}
+
+static void check_write()
+{
+  assert(ft_write(-1, "hallo", 5) == -1);
+  assert(errno == EBADF);
+
+  int dev = open("/", O_RDONLY);
+  assert(dev >= 0);
+  assert(ft_read(dev, "hallo", 5) == -1);
+  assert(errno == EISDIR);
+  assert(!close(dev));
+
+  char str[] = "Hello world!";
+  int fd = open("tmp", O_RDWR | O_CREAT | O_EXCL);
+  assert(fd != -1);
+
+  assert(ft_write(fd, str, sizeof str) == sizeof str);
+  assert(lseek(fd, 0, SEEK_SET) != -1);
+
+  char buf[128];
+  assert(read(fd, buf, sizeof buf) == sizeof str);
+  assert(!memcmp(str, buf, sizeof buf > sizeof str ? sizeof str : sizeof buf));
+  assert(!close(fd));
+
+  assert(unlink("tmp") != -1);
 }
 
 
-int main(void) {
-    test_strlen();
-    test_strcpy();
-    test_strcmp();
-    test_strdup();
+int main()
+{
+  check_strlen();
+  check_strcpy();
+  check_strcmp();
+  check_strdup();
+  check_read();
+  check_write();
 }

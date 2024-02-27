@@ -2,8 +2,8 @@ section .text
     global ft_read
     extern __errno_location
 
-ft_write:
-	xor rax, rax
+ft_read:
+	mov rax, 0
 
 	syscall
 	cmp rax, 0
@@ -12,8 +12,9 @@ ft_write:
 
 error:
 	neg rax
-	mov rdi, rax
+	mov rcx, rax
 	call __errno_location wrt ..plt
-	mov [rax], rdi
+	mov [rax], rcx
 	mov rax, -1
 	ret
+
