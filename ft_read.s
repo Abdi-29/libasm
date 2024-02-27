@@ -11,10 +11,12 @@ ft_read:
 	ret
 
 error:
+	push r12
 	neg rax
-	mov rcx, rax
+	mov r12, rax
 	call __errno_location wrt ..plt
-	mov [rax], rcx
+	mov [rax], r12
+	pop r12
 	mov rax, -1
 	ret
 

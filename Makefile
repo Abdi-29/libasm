@@ -27,10 +27,10 @@ $(NAME): $(OBJ)
 	nasm  -felf64 $<
 
 %.o: %.c
-	gcc $(CFLAGS) -fPIE -c $< -o $@
+	clang $(CFLAGS) -fPIE -c $< -o $@
 
 test: main.o $(NAME)
-	gcc $(CFLAGS) -fPIE $^ -o test
+	clang $(CFLAGS) -fPIE $^ -o test
 
 clean:
 	rm -f $(OBJ) main.o test

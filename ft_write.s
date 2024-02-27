@@ -11,9 +11,11 @@ ft_write:
 	ret
 
 error:
+	push r12
 	neg rax
-	mov rdi, rax
+	mov r12, rax
 	call __errno_location wrt ..plt
-	mov [rax], rdi
+	mov [rax], r12
+	pop r12
 	mov rax, -1
 	ret

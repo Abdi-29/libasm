@@ -7,9 +7,9 @@ ft_strcpy:
     mov rax, rdi
 
     loop:
-        mov bl, BYTE [rsi + rdx]
-        mov BYTE [rdi + rdx], bl
-        cmp bl, 0x0
+        mov ah, BYTE [rsi + rdx]
+        mov BYTE [rdi + rdx], ah
+        cmp ah, 0x0
         je end
 
         inc rdx
