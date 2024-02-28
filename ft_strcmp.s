@@ -6,18 +6,18 @@ ft_strcmp:
     xor rdx, rdx
 
     loop:
-        mov ah, BYTE [rsi + rdx]
-        cmp ah, BYTE [rdi + rdx]
+        mov cl, BYTE [rsi + rdx]
+        cmp cl, BYTE [rdi + rdx]
         jne end
 
-        cmp ah, 0x0
+        cmp cl, 0x0
         je end
         inc rdx
         jmp loop
 
     end:
         movzx rax, BYTE [rdi + rdx]
-        movzx rdx, ah
+        movzx rdx, cl
         sub rax, rdx
         pop rdx
         ret

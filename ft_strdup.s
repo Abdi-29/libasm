@@ -6,16 +6,15 @@ section .text
 
 ft_strdup:
     push rdx
-	mov rsi, rdi   ;copy the string into rsi
 
     call ft_strlen
     inc rax
-    push rsi
+    push rdi
     mov rdi, rax
     call malloc wrt ..plt ;protect malloc
     mov rdi, rax
-    pop rsi
-    cmp rax, 0x0
+    pop rdi
+    cmp rax, 0
     je end
     call ft_strcpy
 

@@ -4,12 +4,11 @@ section .text
 ft_strcpy:
     push rdx
     xor rdx, rdx
-    mov rax, rdi
 
     loop:
-        mov ah, BYTE [rsi + rdx]
-        mov BYTE [rdi + rdx], ah
-        cmp ah, 0x0
+        mov cl, BYTE [rsi + rdx]
+        mov BYTE [rdi + rdx], cl
+        cmp cl, 0
         je end
 
         inc rdx

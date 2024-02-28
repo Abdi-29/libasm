@@ -5,8 +5,8 @@ ft_strlen:
     xor rax, rax     ;i = 0
 
     loop:
-        mov dl, BYTE [rdi+rax]
-        cmp dl, 0
+        mov cl, BYTE [rdi+rax]
+        cmp cl, byte 0
         je end
 
         inc rax
