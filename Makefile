@@ -12,11 +12,7 @@ INCLUDE = libasm.h
 OBJ = $(SRC:%.s=%.o)
 
 
-CFLAGS = -Wall -fPIE -g -fsanitize=address -fsanitize=undefined
-
-ifdef DEBUG
-	CFLAGS := $(CFLAGS) -g -fsanitize=address -fsanitize=undefined
-endif
+CFLAGS = -Wall -Wextra -Werror -fPIE -g -fsanitize=address -fsanitize=undefined
 
 all: $(NAME)
 

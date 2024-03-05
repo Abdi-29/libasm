@@ -9,55 +9,47 @@
 
 #include <stdio.h>
 
-static void check_strlen()
-{
-  assert(ft_strlen("") == 0);
-  assert(ft_strlen("a") == 1);
-  assert(ft_strlen("hello world") == 11);
-  assert(ft_strlen("hello\0 world") == 5);
+#include "libasm.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+
+static void test_strlen() {
+    assert(ft_strlen("") == 0);
+    assert(ft_strlen("normal string") == strlen("normal string"));
+    assert(ft_strlen("hello\0world") == 5);
 }
 
-static void check_strcpy()
-{
-  char buffer[1024];
-  char tmp[1024];
+static void test_strcpy() {
+    char src[1024];
+    char dst[1024];
 
-  memset(buffer, 0, sizeof buffer);
-  memset(tmp, 0, sizeof tmp);
-  assert(ft_strcpy(buffer, "") == buffer);
-  assert(memcmp(buffer, tmp, sizeof tmp) == 0);
+    memset(src, 0, sizeof src);
+    memset(dst, 0, sizeof dst);
+    assert(ft_strcpy(src, "") == src);
+    assert(memcmp(src, dst, sizeof src) == 0);
 
-  const char *str1 = "hello world!";
-  assert(ft_strcpy(buffer, str1) == buffer);
-  assert(strcmp(buffer, str1) == 0);
-
-  memset(buffer, 0, sizeof buffer);
-  const char *str2 = "hello\0 world!";
-  assert(ft_strcpy(buffer, str2) == buffer);
-  assert(strcmp(buffer, str2) == 0);
+    const char *str = "codam";
+    assert(ft_strcpy(src, str) == src);
+    assert(strcmp(src, str) == 0);
 }
 
-static void check_strcmp()
-{
-  assert(ft_strcmp("", "") == 0);
-  assert(ft_strcmp("hello", "hello") == 0);
-  assert(ft_strcmp("ab", "ac") < 0);
-  assert(ft_strcmp("ac", "ab") > 0);
-  assert(ft_strcmp("abc", "acc") < 0);
-  assert(ft_strcmp("acc", "abc") > 0);
+static void test_strcmp() {
+    assert(ft_strcmp("hello", "hello") == 0);
+    assert(ft_strcmp("hello\200", "hello\300") < 0);
+    assert(ft_strcmp("hello\300", "hello\200") > 0);
 }
 
-static void check_strdup_one(const char *s)
-{
-  char *d = ft_strdup(s);
-  assert(!strcmp(d, s));
-  free(d);
+static void strdup_helper(const char *str) {
+    char *c = ft_strdup(str);
+    assert(ft_strcmp(str, c) == 0);
+    free(c);
 }
-
-static void check_strdup()
-{
-  check_strdup_one("");
-  check_strdup_one("hallo");
+static void test_strdup() {
+    strdup_helper("");
+    strdup_helper("hello");
 }
 
 static void check_read()
@@ -113,12 +105,13 @@ static void check_write()
   assert(unlink("tmp") != -1);
 }
 
-int main()
+
+int main(void)
 {
-  check_strlen();
-  check_strcpy();
-  check_strcmp();
-  check_strdup();
-  check_read();
-  check_write();
+  test_strlen();
+  test_strcpy();
+  test_strcmp();
+  test_strdup();
+  check_read();    //Daan tester
+  check_write();   //Daan tester
 }
