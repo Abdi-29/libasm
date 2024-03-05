@@ -6,14 +6,15 @@ section .text
 
 ft_strdup:
     push rdx
+    mov rsi, rdi ;make a copy
 
     call ft_strlen
     inc rax
-    push rdi
+    push rsi
     mov rdi, rax
     call malloc wrt ..plt ;protect malloc
     mov rdi, rax
-    pop rdi
+    pop rsi
     cmp rax, 0
     je end
     call ft_strcpy

@@ -6,7 +6,7 @@ ft_strlen:
 
     loop:
         mov cl, BYTE [rdi+rax]
-        cmp cl, byte 0
+        cmp cl, 0
         je end
 
         inc rax

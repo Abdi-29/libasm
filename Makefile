@@ -12,7 +12,7 @@ INCLUDE = libasm.h
 OBJ = $(SRC:%.s=%.o)
 
 
-CFLAGS = -Wall -Werror -Wextra -fPIE -g -fsanitize=address -fsanitize=undefined
+CFLAGS = -Wall -fPIE -g -fsanitize=address -fsanitize=undefined
 
 ifdef DEBUG
 	CFLAGS := $(CFLAGS) -g -fsanitize=address -fsanitize=undefined
@@ -27,10 +27,10 @@ $(NAME): $(OBJ)
 	nasm  -felf64 $<
 
 %.o: %.c
-	clang $(CFLAGS) -fPIE -c $< -o $@
+	gcc $(CFLAGS) -c $< -o $@
 
 test: main.o $(NAME)
-	clang $(CFLAGS) -fPIE $^ -o test
+	gcc $(CFLAGS) $^ -o test
 
 clean:
 	rm -f $(OBJ) main.o test
